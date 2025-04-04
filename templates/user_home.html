@@ -1,0 +1,193 @@
+{% extends "include/_base_user.html" %}
+
+{% block title %}User Home{% endblock %}
+
+{% block content %}
+<h2>User Home</h2>
+<div class="simulation-form">
+
+    <div class="account-creation-info">
+        <h3>Bienvenue, {{ user.nom }} {{ user.prénom }}</h3>
+        <p>
+            Vous pouvez effectuer une simulation de consommation d'énergie pour vos projets d'éclairage.
+            Celle-ci sera sauvegarder dans votre compte.
+        </p>
+    </div>
+    <form method="POST" action="{{ url_for('user.user_home') }}" class="action"> 
+        <div class="form-group">
+            <label>{{ form.project_name.label }}</label>
+            {{ form.project_name(class="input-field", placeholder="Nom du projet") }}
+            {% if form.project_name.errors %}
+                <span class="error">{{ form.project_name.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group">
+            <label>{{ form.location_type.label }}</label>
+            {{ form.location_type(class="input-field") }}
+            {% if form.location_type.errors %}
+                <span class="error">{{ form.location_type.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group">
+            <label for="usage_hours">Horaires d'utilisation:</label>
+            <div class="usage-hours-table">
+                {% for hour in range(24) %}
+                    <div class="usage-hour">
+                        <input type="checkbox" id="hour_{{ hour }}" name="heuresutilisation_{{ hour }}" value="{{ '%02d:00 - %02d:00' % (hour, (hour + 1) % 24) }}">
+                        <label for="hour_{{ hour }}">{{ '%02d:00 - %02d:00' % (hour, (hour + 1) % 24) }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <label>{{ form.luminaire_type.label }}</label>
+            {{ form.luminaire_type(class="input-field") }}
+            {% if form.luminaire_type.errors %}
+                <span class="error">{{ form.luminaire_type.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group">
+            <label>{{ form.trigger_system.label }}</label>
+            {{ form.trigger_system(class="input-field") }}
+            {% if form.trigger_system.errors %}
+                <span class="error">{{ form.trigger_system.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group" id="trigger_duration">
+            <label>{{ form.trigger_duration.label }}</label>
+            {{ form.trigger_duration(class="input-field") }}
+            {% if form.trigger_duration.errors %}
+                <span class="error">{{ form.trigger_duration.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group">
+            <label>{{ form.puissance.label }}</label>
+            {{ form.puissance(class="input-field", placeholder="ex. : 60") }}
+            {% if form.puissance.errors %}
+                <span class="error">{{ form.puissance.errors[0] }}</span>
+            {% endif %}
+        </div>
+       
+        <div class="form-group">
+            <label>{{ form.nombreluminaire.label }}</label>
+            {{ form.nombreluminaire(class="input-field", placeholder="ex. : 1") }}
+            {% if form.nombreluminaire.errors %}
+                <span class="error">{{ form.nombreluminaire.errors[0] }}</span>
+            {% endif %}
+        </div>
+       
+        <div class="form-group">
+            <label>{{ form.contract_type.label }}</label>
+            {{ form.contract_type(class="input-field") }}
+            {% if form.contract_type.errors %}
+                <span class="error">{{ form.contract_type.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <div class="form-group" id="prixkWh">
+            <label for="prixkWh">Prix du kWh :</label>
+            <select name="prixkWh" class="input-field">
+                {% for price in prices %}
+                    <option value="{{ price['prix'] }}">{{ price['pays'] }}: {{ price['prix'] }} {{ price['devise'] }}/kWh</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="form-group" id="heures_creuses_pleines">
+            <label>{{ form.prixheurescreuses.label }}</label>
+            {{ form.prixheurescreuses(class="input-field", placeholder="ex. : 0.15") }}
+            {% if form.prixheurescreuses.errors %}
+                <span class="error">{{ form.prixheurescreuses.errors[0] }}</span>
+            {% endif %}
+            <label>{{ form.prixheurespleines.label }}</label>
+            {{ form.prixheurespleines(class="input-field", placeholder="ex. : 0.30") }}
+            {% if form.prixheurespleines.errors %}
+                <span class="error">{{ form.prixheurespleines.errors[0] }}</span>
+            {% endif %}
+        </div>
+    
+        <button type="submit" name="start_simulation"class="btn-submit">{{ form.submit.label }}</button>
+    </form>
+    
+    {% if consommation %}
+    <h3>Résultat :</h3>
+    <p>Consommation actuelle : <strong>{{ consommation }} kWh/mois</strong></p>
+    <p>En passant aux LED : <strong>{{ consommation_led }} kWh/mois</strong></p>
+    <p>Économie potentielle : <strong>{{ economie }} kWh/mois</strong></p>
+    <p>Prix économisé : <strong>{{ coût - coût_led }} €/mois</strong></p>
+    <p>Total heures pleines : <strong>{{ total_heures_pleines }} heures</strong></p>
+    <p>Total heures creuses : <strong>{{ total_heures_creuses }} heures</strong></p>
+    
+    <h3>Graphique :</h3>
+    <div class="chart-container">
+        <img src="{{ graph }}" alt="Graphique de consommation et économie">
+    </div>
+     
+    
+    <form method="POST" action="{{ url_for('pdf.generate_pdf') }}" onsubmit="return confirm('Voulez-vous générer le rapport PDF ?');">
+        <input type="hidden" name="project_name" value="{{ form.project_name.data }}">
+        <input type="hidden" name="location_type" value="{{ form.location_type.data }}">
+        <input type="hidden" name="luminaire_type" value="{{ form.luminaire_type.data }}">
+        <input type="hidden" name="consommation" value="{{ consommation }}">
+        <input type="hidden" name="consommation_led" value="{{ consommation_led }}">
+        <input type="hidden" name="economie" value="{{ economie }}">
+        <input type="hidden" name="coût" value="{{ coût }}">
+        <input type="hidden" name="coût_led" value="{{ coût_led }}">
+        <input type="hidden" name="total_heures_pleines" value="{{ total_heures_pleines }}">
+        <input type="hidden" name="total_heures_creuses" value="{{ total_heures_creuses }}">
+        <input type="hidden" name="graph" value="{{ graph }}">
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-file-pdf"></i> Générer le rapport PDF
+        </button>
+    </form>
+     
+    
+    {% endif %}
+    
+    
+    
+    <script>
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     const triggerSystemField = document.querySelector('select[name="trigger_system"]');
+        //     const triggerDurationField = document.getElementById('trigger_duration');
+    
+        //     function toggleTriggerDuration() {
+        //         if (triggerSystemField.value === 'Interrupteur manuel') {
+        //             triggerDurationField.style.display = 'block';
+        //         } else {
+        //             triggerDurationField.style.display = 'none';
+        //         }
+        //     }
+    
+        //     // Ajouter un écouteur d'événement sur le changement
+        //     triggerSystemField.addEventListener('change', toggleTriggerDuration);
+        //     // Appeler la fonction pour afficher ou masquer le champ
+        //     toggleTriggerDuration();
+        // });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const contractTypeField = document.querySelector('select[name="contract_type"]');
+            const heuresCreusesPleinesField = document.getElementById('heures_creuses_pleines');
+    
+            function toggleHeuresCreusesPleines() {
+                if (contractTypeField.value === 'heurescreusespleines') {
+                    heuresCreusesPleinesField.style.display = 'block';
+                    prixkWh.style.display = 'none';
+                } else {
+                    heuresCreusesPleinesField.style.display = 'none';
+                    prixkWh.style.display = 'block';
+                }
+            }
+    
+            contractTypeField.addEventListener('change', toggleHeuresCreusesPleines);
+            toggleHeuresCreusesPleines();
+        });
+    </script>
+    </div>
+{% endblock %}

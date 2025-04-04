@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Simulateur de Consommation{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <div class="container">
+        <div class="nav-bar">
+            <a href="{{ url_for('admin.admin_home') }}" class="btn-user-action">Accueil administrateur</a>
+            <a href="{{ url_for('prices.pricekWh') }}" class="btn-admin-action">Changer les prix</a>
+            <a href="{{ url_for('admin.create_admin') }}" class="btn-admin-action">Créer un nouvel admin</a>
+            <a href="{{ url_for('admin.logout') }}" class="btn-admin-action btn-logout">Déconnexion</a>
+        </div>
+    </div>
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
+</body>
+</html>

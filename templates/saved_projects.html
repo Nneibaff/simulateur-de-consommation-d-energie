@@ -1,0 +1,61 @@
+{% extends "include/_base_user.html" %}
+
+{% block title %}Projets enregistrés{% endblock %}
+
+{% block content %}
+<h2>Projets enregistrés</h2>
+
+<!-- Affichage des projets -->
+{% if projects %}
+    <ul class="project-list">
+        {% for project in projects %}
+            <li class="project-item">
+                <strong>{{ project.project_name }}</strong> ({{ project.location_type }})
+                
+                <form method="POST" action="{{ url_for('user.saved_projects') }}">
+                    <!-- Ajout du champ caché pour transmettre l'ID du projet -->
+                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                    
+                    <label>Nom du projet:</label>
+                    <input type="text" name="project_name" value="{{ project.project_name }}" required>
+
+                    <label>Type d'emplacement:</label>
+                    <input type="text" name="location_type" value="{{ project.location_type }}">
+
+                    <label>Type de luminaire:</label>
+                    <input type="text" name="luminaire_type" value="{{ project.luminaire_type }}">
+
+                    <label>Système de déclenchement:</label>
+                    <input type="text" name="trigger_system" value="{{ project.trigger_system }}">
+
+                    <label>Durée de déclenchement (min):</label>
+                    <input type="number" name="trigger_duration" value="{{ project.trigger_duration }}">
+
+                    <label>Puissance (W):</label>
+                    <input type="number" name="puissance" value="{{ project.puissance }}">
+
+                    <label>Nombre de luminaires:</label>
+                    <input type="number" name="nombreluminaire" value="{{ project.nombreluminaire }}">
+
+                    <label>Type de contrat:</label>
+                    <input type="text" name="contract_type" value="{{ project.contract_type }}">
+
+                    <label>Prix heures creuses (€):</label>
+                    <input type="number" step="0.01" name="prixheurescreuses" value="{{ project.prixheurescreuses }}">
+
+                    <label>Prix heures pleines (€):</label>
+                    <input type="number" step="0.01" name="prixheurespleines" value="{{ project.prixheurespleines }}">
+
+                    <label>Prix du kWh (€):</label>
+                    <input type="number" step="0.01" name="prixkWh" value="{{ project.prixkWh }}">
+
+                    <button type="submit">Modifier</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucun projet enregistré.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,2 @@
+# Ignore Firestore credentials
+config/firestore-creds.json

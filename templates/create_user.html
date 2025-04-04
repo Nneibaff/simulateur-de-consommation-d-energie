@@ -1,0 +1,47 @@
+{% extends "include/_base.html" %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="btn-back">Retour</a>
+    <h2>Créer un compte utilisateur</h2>
+    <form method="POST" action="{{ url_for('user.create_user') }}">
+        <div class="form-group">
+            <label>{{ form.email.label }}</label>
+            {{ form.email(class="input-field", placeholder="Adresse email") }}
+            {% if form.email.errors %}
+                <span class="error">{{ form.email.errors[0] }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>{{ form.pwd.label }}</label>
+            {{ form.pwd(class="input-field", placeholder="Mot de passe") }}
+            {% if form.pwd.errors %}
+                <span class="error">{{ form.pwd.errors[0] }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>{{ form.pwd2.label }}</label>
+            {{ form.pwd2(class="input-field", placeholder="Retaper le mot de passe") }}
+            {% if form.pwd2.errors %}
+                <span class="error">{{ form.pwd2.errors[0] }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>{{ form.Nom.label }}</label>
+            {{ form.Nom(class="input-field", placeholder="Nom") }}
+            {% if form.Nom.errors %}
+                <span class="error">{{ form.Nom.errors[0] }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>{{ form.Prénom.label }}</label>
+            {{ form.Prénom(class="input-field", placeholder="Prénom") }}
+            {% if form.Prénom.errors %}
+                <span class="error">{{ form.Prénom.errors[0] }}</span>
+            {% endif %}
+        </div>
+       
+        <button type="submit" class="btn-submit">Créer un compte</button>
+    </form>
+{% endblock %}

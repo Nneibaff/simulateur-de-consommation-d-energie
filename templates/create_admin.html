@@ -1,0 +1,21 @@
+{% extends "include/_base_admin.html" %}
+
+{% block title %}Créer un nouvel admin{% endblock %}
+
+{% block content %}
+<h2>Créer un nouvel admin</h2>
+<form method="POST" action="{{ url_for('admin.create_admin') }}" class="action">
+    <div class="form-group">
+        <label>{{ form.username.label }}</label>
+        {{ form.username(class="input-field") }}
+        {% if form.username.errors %}
+            <div class="error-message">{{ form.username.errors[0] }}</div>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        <label>{{ form.password.label }}</label>
+        {{ form.password(class="input-field", type="password") }}
+    </div>
+    <button type="submit" class="btn-submit">{{ form.submit.label }}</button>
+</form>
+{% endblock %}

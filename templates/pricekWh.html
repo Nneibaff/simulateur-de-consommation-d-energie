@@ -1,0 +1,50 @@
+{% extends "include/_base_admin.html" %}
+
+{% block title %}Admin - Gestion des Prix{% endblock %}
+
+{% block content %}
+
+<h2>Gestion des Prix</h2>
+<form method="POST" action="{{ url_for('prices.pricekWh') }}" class="action">
+    <div class="form-group">
+        <label>{{ form.pays.label }}</label>
+        {{ form.pays(class="input-field") }}
+    </div>
+    <div class="form-group">
+        <label>{{ form.prix.label }}</label>
+        {{ form.prix(class="input-field") }}
+    </div>
+    <div class="form-group">
+        <label>{{ form.devise.label }}</label>
+        {{ form.devise(class="input-field") }}
+    </div>
+    <button type="submit" class="btn-submit">{{ form.submit.label }}</button>
+</form>
+
+<h3>Liste des Prix</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Pays</th>
+            <th>Prix</th>
+            <th>Devise</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for price in prices %}
+        <tr>
+            <form method="POST" action="{{ url_for('pricekWh_update', index=loop.index0) }}">
+                <td><input type="text" name="pays" value="{{ price['pays'] }}" required></td>
+                <td><input type="number" step="0.01" name="prix" value="{{ price['prix'] }}" required></td>
+                <td><input type="text" name="devise" value="{{ price['devise'] }}" required></td>
+                <td>
+                    <button type="submit" class="btn-submit">Modifier</button>
+                    <a href="{{ url_for('pricekWh_delete', index=loop.index0) }}" class="btn-delete">Supprimer</a>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

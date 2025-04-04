@@ -1,0 +1,9 @@
+id,Type de pièce,Luminosité recommandée (lm/m²),Ampoule incandescente (W),Luminosité ampoule incandescente (lm),Tube fluorescent (W),Luminosité tube fluorescent (lm),Spot halogène (W),Luminosité spot halogène,LED (W),LED (lm)
+1,Salon / Séjour,300 - 500 lm/m²,200 - 300 W,3000,50 - 70 W,3000,150 - 250 W,3000,20 - 40 W,2000
+2,Cuisine (plan de travail),500 - 700 lm/m²,250 - 350 W,3750,60 - 80 W,3600,200 - 300 W,4000,30 - 50 W,3000
+3,Chambre,200 - 400 lm/m²,150 - 200 W,2250,40 - 60 W,2400,100 - 150 W,2000,15 - 35 W,1500
+4,Salle de bain,400 - 600 lm/m²,200 - 300 W,3000,50 - 70 W,3000,150 - 250 W,3000,20 - 45 W,2000
+5,Bureau,400 - 700 lm/m²,250 - 350 W,3750,60 - 80 W,3600,200 - 300 W,4000,30 - 50 W,3000
+6,Couloir / Escalier,100 - 300 lm/m²,100 - 150 W,1500,30 - 50 W,1800,80 - 120 W,1600,10 - 25 W,1000
+7,Garage / Atelier,300 - 500 lm/m²,300 - 400 W,4500,70 - 100 W,4200,250 - 350 W,5000,40 - 60 W,4000
+8,Terrasse / Balcon,100 - 300 lm/m²,100 - 150 W,1500,30 - 50 W,1800,80 - 120 W,1600,10 - 25 W,1000
